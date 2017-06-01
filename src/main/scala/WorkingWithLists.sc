@@ -71,3 +71,48 @@ def encode[A](ls:List[A]):List[(Int,A)]={
   pack(ls) map {x => (x.length,x.head)}
 }
 
+def encodeModified[A](ls:List[A]):List[Any]={
+  encode(ls) map (x =>if (x._1 == 1) x._2 else x)
+}
+
+def decode[A](ls: List[(Int,A)]):List[A]={
+  ls flatMap (x =>List.fill(x._1)(x._2))
+}
+
+def encodeDirect[A](ls: List[A]):List[(Int,A)]={
+  if(ls.isEmpty) Nil
+  else{
+    val (packed, next) = ls span {_ == ls.head}
+    (packed.length,packed.head)::encodeDirect(next)
+  }
+}
+
+def duplicate[A](ls: List[A]):List[A]={
+  ls flatMap (x =>List.fill(2)(x))
+}
+
+def duplicateN[A](n: Int,ls: List[A]):List[A]={
+  ls flatMap (x =>List.fill(n)(x))
+}
+
+def drop[A](n: Int, ls:List[A]):List[A]={
+  (ls.grouped(n) flatMap (y => y.take(n-1))).toList
+}
+
+def split[A](n: Int, ls:List[A]):(List[A],List[A])={
+  (ls take n, ls drop n)
+}
+
+def slice[A](n:Int,m:Int,ls:List[A]):List[A]={
+  ls.drop(n).take(m-n)
+}
+
+def rotate[A](n:Int,ls: List[A]):List[A]={
+  if (n <0) ((ls drop (length(ls)+n))::List(ls take (length(ls)+n))).flatten
+  else ((ls drop n)::List(ls take n))flatten
+}
+
+def removeAt[A](n:Int, ls:List[A]):List[A]={
+
+}
+removeAt(1, List('a, 'b, 'c, 'd))
