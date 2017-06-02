@@ -108,11 +108,66 @@ def slice[A](n:Int,m:Int,ls:List[A]):List[A]={
 }
 
 def rotate[A](n:Int,ls: List[A]):List[A]={
-  if (n <0) ((ls drop (length(ls)+n))::List(ls take (length(ls)+n))).flatten
+  if (n <0) ((ls drop (length(ls)+n))::List(ls take (length(ls)+n))) flatten
   else ((ls drop n)::List(ls take n))flatten
 }
 
-def removeAt[A](n:Int, ls:List[A]):List[A]={
-
+def removeAt[A](n:Int, ls:List[A]):(List[A],A)={
+  (((ls take n):: List(ls drop (n+1))) flatten,slice(n,n+1,ls).head)
 }
-removeAt(1, List('a, 'b, 'c, 'd))
+
+def insertAt[A](x:A,n:Int,ls:List[A]):List[A]={
+  ((ls take n)::List(x)::List(ls drop n)) flatten
+}
+
+def range(n:Int,m:Int):List[Int]={
+  @tailrec
+  def loop(acc: List[Int]=List(),a:Int=n):List[Int]={
+    if(a==m)acc:+a
+    else loop(acc:+a,a+1)
+  }
+  loop()
+}
+
+def randomSelect[A](n: Int,ls:List[A]):List[Any]= {
+  if (n >= ls.size) ls
+  else {
+  val rand = scala.util.Random
+
+  def loop[A](acc: List[A] = List(), m: Int = n, xs: List[A] = ls): List[Any] = {
+    val x = rand.nextInt(xs.size)
+    val res = removeAt(x, xs)
+    if (m == 0) acc
+    else loop(acc :+ res._2, m - 1, res._1)
+  }
+
+  loop()
+}
+}
+
+def lotto(n:Int,m:Int):List[Int]={
+  val rand = scala.util.Random
+  @tailrec
+  def loop(acc:List[Int]=List(),a:Int=n): List[Int] ={
+    if(a==0)acc
+    else loop(acc:+rand.nextInt(m),a-1)
+  }
+  loop()
+}
+
+def randomPermute[A](ls:List[A]):List[A]={
+  ls.toSet.toList
+}
+
+def combinations[A](n:Int, ls:List[A]):List[List[A]]={
+  @tailrec
+  def loop(acc:List[List[A]],xs:List[A]=ls):List[List[A]]=xs match{
+    case Nil => acc
+    case a :: as => loop(acc :::(acc map (a ::_)),as)
+  }
+  loop(Nil::Nil).filter(x => x.size == n)
+}
+
+def group[A](xs:List[Int],ls:List[A]):List[List[List[Any]]]={
+  List(combinations(nth(0,xs),ls)::combinations(nth(1,xs),ls)::combinations(nth(2,xs),ls))
+}
