@@ -1,4 +1,5 @@
 import scala.annotation.tailrec
+import math.Ordering
 
 def last[A](xs: List[A]):A = {
   if (xs.tail.isEmpty) xs.head
@@ -129,12 +130,12 @@ def range(n:Int,m:Int):List[Int]={
   loop()
 }
 
-def randomSelect[A](n: Int,ls:List[A]):List[Any]= {
+def randomSelect[A](n: Int,ls:List[A]):List[A]= {
   if (n >= ls.size) ls
   else {
   val rand = scala.util.Random
 
-  def loop[A](acc: List[A] = List(), m: Int = n, xs: List[A] = ls): List[Any] = {
+  def loop[A](acc: List[A] = List(), m: Int = n, xs: List[A] = ls): List[A] = {
     val x = rand.nextInt(xs.size)
     val res = removeAt(x, xs)
     if (m == 0) acc
@@ -171,3 +172,4 @@ def combinations[A](n:Int, ls:List[A]):List[List[A]]={
 def group[A](xs:List[Int],ls:List[A]):List[List[List[Any]]]={
   List(combinations(nth(0,xs),ls)::combinations(nth(1,xs),ls)::combinations(nth(2,xs),ls))
 }
+
